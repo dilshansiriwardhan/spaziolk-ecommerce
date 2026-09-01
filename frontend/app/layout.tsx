@@ -9,6 +9,7 @@ import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { Heart, ShoppingCart, UserRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import Link from "next/link";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -35,13 +36,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               {/* logo */}
               <div>
                 <div className="relative h-5 w-auto ">
-                  <Image
-                    src="/company-logo.svg"
-                    alt="Product"
-                    width={100}
-                    height={100}
-                    className="object-cover"
-                  />
+                  <Link href={'/'}>
+                    <Image
+                      src="/company-logo.svg"
+                      alt="Product"
+                      width={100}
+                      height={100}
+                      className="object-cover"
+                    />
+                  </Link>
                 </div>
               </div>
 

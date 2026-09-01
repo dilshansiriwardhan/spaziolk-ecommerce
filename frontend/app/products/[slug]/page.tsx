@@ -1,4 +1,3 @@
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -7,41 +6,31 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import CarouselWithThumbs from "@/components/my/d";
 
-// numberOfReviews
-// productName
-// productType
-// productPrice
-// productSizes: Colors for sizes
-// productDescription
-// productFeatures
+import { db } from "@/db";
+import { eq } from "drizzle-orm";
+import * as schema from "@/db/schema";
 
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
 
-// schema.prisma
-// │   ├── user.prisma
-// │   ├── product.prisma
-// │   ├── category.prisma
-// │   ├── brand.prisma
-// │   ├── review.prisma
-// │   ├── cart.prisma
-// │   ├── wishlist.prisma
-// │   ├── order.prisma
-// │   ├── payment.prisma
-// │   └── enums.prisma
-
-
-export default async function ProductPage() {
-  
+  const product = await db.query.products.findFirst({
+    where: (products, { eq }) => eq(products.id, slug),
+    with: {
+      category: true,
+      images: true,
+      variants: true,
+      features: true,
+      reviews: true,
+    },
+  });
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full px-20 gap-1">
@@ -54,17 +43,17 @@ export default async function ProductPage() {
           className="w-full h-auto"
           priority
         /> */}
-        <CarouselWithThumbs />
+        <CarouselWithThumbs images={product?.images?.map((image) => image.url) ?? []}/>
       </div>
       <div className="flex flex-col gap-3">
-        <div>2 reviews</div>
+        <div>{product?.reviews.length} reviews </div>
         <div className="flex justify-between">
           <div>
-            <p>Le Classique Boxy Shirt // Black</p>
-            <p>SHIRT</p>
+            <p>{product?.productName}</p>
+            <p>{product?.productType}</p>
           </div>
-          <div>
-            <p>Rs.1,350.00</p>
+          <div className="text-right">
+            <p >{product?.productPrice} LKR</p>
             <p>tax included</p>
           </div>
         </div>
@@ -98,12 +87,20 @@ export default async function ProductPage() {
               <TabsTrigger value="xl">XL</TabsTrigger>
               <TabsTrigger value="2xl">2XL</TabsTrigger>
             </TabsList>
+
             <TabsContent value="s" className="px-2 flex gap-2">
-              <div className="bg-[#1C1C1C] w-10 h-10 rounded" />
-              <div className="bg-[#F2E9DC] w-10 h-10 rounded" />
-              <div className="bg-[#7A6652] w-10 h-10 rounded" />
-              <div className="bg-[#3F4A3C] w-10 h-10 rounded" />
-              <div className="bg-[#B58B6A] w-10 h-10 rounded" />
+              {product?.variants && product.variants.length > 0 ? (
+                product.variants.map((variant) => (
+                  <div
+                    key={variant.id} // Always include a unique key in loops
+                    style={{ backgroundColor: variant.colorCode ?? "#B58B6A" }} // Fixes Tailwind runtime parsing issue
+                    className="w-10 h-10 rounded"
+                    title={variant.colorCode ?? "default"}
+                  />
+                ))
+              ) : (
+                <div className="bg-[#F2E9DC] w-10 h-10 rounded" />
+              )}
             </TabsContent>
             <TabsContent value="m" className="px-2 flex gap-2">
               <div className="bg-[#1C1C1C] w-10 h-10 rounded" />
@@ -145,21 +142,20 @@ export default async function ProductPage() {
               <AccordionTrigger>Core Features</AccordionTrigger>
               <AccordionContent>
                 <ul className="list-none space-y-2 pl-5 text-sm text-gray-700">
-                  <li>Half sleeves</li>
-                  <li>1× chest pocket</li>
-                  <li>Custom label at front-side hem</li>
-                  <li>“Skate Club” embroidery on the chest</li>
-                  <li>Turn-down collar</li>
-                  <li>Button-down style</li>
+                  {product?.variants && product.variants.length > 0 && (
+                    <ul className="list-none space-y-2 pl-5 text-sm text-gray-700">
+                      {product.features.map((feature) => (
+                        <li key={feature.id}>{feature.name}</li>
+                      ))}
+                    </ul>
+                  )}
                 </ul>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="returns">
               <AccordionTrigger>Description</AccordionTrigger>
               <AccordionContent>
-                Made from 100% cotton poplin, this unisex piece features a boxy
-                fit for a relaxed, contemporary look. Finished in Black, it’s
-                designed for versatile everyday wear. Made in India.
+                {product?.description}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="shipping">

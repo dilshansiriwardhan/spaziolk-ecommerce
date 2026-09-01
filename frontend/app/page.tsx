@@ -50,14 +50,15 @@ export default async function Home() {
         </div>
       </div>
       {/* Product List */}
-      <div className="grid grid-cols-4 justify-between py-10 px-25 gap-2">
+      <div>
         {allProducts.length === 0 ? (
           <div>No Products Found</div>
         ) : (
-          <div>
+          <div className="grid grid-cols-4 justify-between py-10 px-25 gap-2">
             {allProducts.map((product) => (
               <ProductCard
                 key={product.id}
+                id={product.id}
                 imageSrc={imagesByProductId[product.id][0]}
                 productName={product.productName}
                 productPrice={product.productPrice}
