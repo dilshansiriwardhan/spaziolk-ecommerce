@@ -24,22 +24,25 @@ export default function CarouselWithThumbs() {
   const [current, setCurrent] = React.useState(0);
 
   React.useEffect(() => {
-    if (!api) {
-      return;
-    }
+    if (!api) return;
 
-    setCurrent(api.selectedScrollSnap() + 1);
-
-    api.on("select", () => {
+    const onSelect = () => {
       setCurrent(api.selectedScrollSnap() + 1);
-    });
+    };
+
+    onSelect();
+    api.on("select", onSelect);
+
+    return () => {
+      api.off("select", onSelect);
+    };
   }, [api]);
 
   const handleThumbClick = React.useCallback(
     (index: number) => {
       api?.scrollTo(index);
     },
-    [api]
+    [api],
   );
 
   return (
@@ -65,7 +68,7 @@ export default function CarouselWithThumbs() {
               <CarouselItem
                 className={cn(
                   "basis-1/4 cursor-pointer transition-opacity",
-                  current === index + 1 ? "opacity-100" : "opacity-50"
+                  current === index + 1 ? "opacity-100" : "opacity-50",
                 )}
                 key={image}
                 onClick={() => handleThumbClick(index)}
@@ -85,6 +88,3 @@ export default function CarouselWithThumbs() {
     </div>
   );
 }
-
-
-

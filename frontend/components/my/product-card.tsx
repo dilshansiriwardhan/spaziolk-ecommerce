@@ -1,20 +1,31 @@
 import React from "react";
 import Image from "next/image";
 
-const ProductCard = () => {
+type ProductCardProps = {
+  productName: string;
+  productPrice: number;
+  imageSrc?: string;
+};
+
+const ProductCard = ({
+  productName,
+  productPrice,
+  imageSrc = "/products/001.webp",
+}: ProductCardProps) => {
   return (
     <div className="border border-foreground/10 w-full rounded-xl overflow-hidden">
       <Image
-        src="/products/001.webp"
-        alt="Product"
+        unoptimized
+        src={imageSrc}
+        alt={productName}
         width={400}
         height={600}
         className="w-full h-auto"
         priority
       />
       <div className="p-2">
-        <p>Product card</p>
-        <p>1,500 LKR</p>
+        <p>{productName}</p>
+        <p>{productPrice} LKR</p>
       </div>
     </div>
   );

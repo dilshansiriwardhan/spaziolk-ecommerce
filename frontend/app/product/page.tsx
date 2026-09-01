@@ -1,5 +1,3 @@
-import React from "react";
-import Image from "next/image";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,18 +6,43 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import CarouselWithThumbs from "@/components/my/d";
-import { Plus } from "lucide-react";
 
-const ProductPage = () => {
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import CarouselWithThumbs from "@/components/my/d";
+
+// numberOfReviews
+// productName
+// productType
+// productPrice
+// productSizes: Colors for sizes
+// productDescription
+// productFeatures
+
+
+// schema.prisma
+// │   ├── user.prisma
+// │   ├── product.prisma
+// │   ├── category.prisma
+// │   ├── brand.prisma
+// │   ├── review.prisma
+// │   ├── cart.prisma
+// │   ├── wishlist.prisma
+// │   ├── order.prisma
+// │   ├── payment.prisma
+// │   └── enums.prisma
+
+
+export default async function ProductPage() {
+  
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full px-20 gap-1">
       <div className="mx-10">
@@ -31,59 +54,176 @@ const ProductPage = () => {
           className="w-full h-auto"
           priority
         /> */}
-        <CarouselWithThumbs/>
+        <CarouselWithThumbs />
       </div>
       <div className="flex flex-col gap-3">
         <div>2 reviews</div>
         <div className="flex justify-between">
           <div>
             <p>Le Classique Boxy Shirt // Black</p>
-            <p>shirt</p>
+            <p>SHIRT</p>
           </div>
           <div>
             <p>Rs.1,350.00</p>
             <p>tax included</p>
           </div>
         </div>
-        <div>
-          <ToggleGroup variant="outline" defaultValue={["all"]}>
-            <ToggleGroupItem value="all" aria-label="Toggle all">
-              All
+        <div className="w-full">
+          {/* <ToggleGroup
+            variant="outline"
+            defaultValue={["s"]}
+            className={"w-full flex justify-between gap-2"}
+          >
+            <ToggleGroupItem value="s" aria-label="Toggle all">
+              S
             </ToggleGroupItem>
-            <ToggleGroupItem value="missed" aria-label="Toggle missed">
-              Missed
+            <ToggleGroupItem value="m" aria-label="Toggle missed">
+              M
             </ToggleGroupItem>
-          </ToggleGroup>
+            <ToggleGroupItem value="l" aria-label="Toggle all">
+              L
+            </ToggleGroupItem>
+            <ToggleGroupItem value="xl" aria-label="Toggle all">
+              XL
+            </ToggleGroupItem>
+            <ToggleGroupItem value="2xl" aria-label="Toggle all">
+              2XL
+            </ToggleGroupItem>
+          </ToggleGroup> */}
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className={"w-full"}>
+              <TabsTrigger value="s">S</TabsTrigger>
+              <TabsTrigger value="m">M</TabsTrigger>
+              <TabsTrigger value="l">L</TabsTrigger>
+              <TabsTrigger value="xl">XL</TabsTrigger>
+              <TabsTrigger value="2xl">2XL</TabsTrigger>
+            </TabsList>
+            <TabsContent value="s" className="px-2 flex gap-2">
+              <div className="bg-[#1C1C1C] w-10 h-10 rounded" />
+              <div className="bg-[#F2E9DC] w-10 h-10 rounded" />
+              <div className="bg-[#7A6652] w-10 h-10 rounded" />
+              <div className="bg-[#3F4A3C] w-10 h-10 rounded" />
+              <div className="bg-[#B58B6A] w-10 h-10 rounded" />
+            </TabsContent>
+            <TabsContent value="m" className="px-2 flex gap-2">
+              <div className="bg-[#1C1C1C] w-10 h-10 rounded" />
+              <div className="bg-[#F2E9DC] w-10 h-10 rounded" />
+              <div className="bg-[#7A6652] w-10 h-10 rounded" />
+              <div className="bg-[#3F4A3C] w-10 h-10 rounded" />
+              <div className="bg-[#B58B6A] w-10 h-10 rounded" />
+            </TabsContent>
+            <TabsContent value="l" className="px-2 flex gap-2">
+              <div className="bg-[#1C1C1C] w-10 h-10 rounded" />
+              <div className="bg-[#F2E9DC] w-10 h-10 rounded" />
+              <div className="bg-[#7A6652] w-10 h-10 rounded" />
+              <div className="bg-[#3F4A3C] w-10 h-10 rounded" />
+              <div className="bg-[#B58B6A] w-10 h-10 rounded" />
+            </TabsContent>
+            <TabsContent value="xl" className="px-2 flex gap-2">
+              <div className="bg-[#1C1C1C] w-10 h-10 rounded" />
+              <div className="bg-[#F2E9DC] w-10 h-10 rounded" />
+              <div className="bg-[#7A6652] w-10 h-10 rounded" />
+              <div className="bg-[#3F4A3C] w-10 h-10 rounded" />
+              <div className="bg-[#B58B6A] w-10 h-10 rounded" />
+            </TabsContent>
+            <TabsContent value="2xl" className="px-2 flex gap-2">
+              <div className="bg-[#1C1C1C] w-10 h-10 rounded" />
+              <div className="bg-[#F2E9DC] w-10 h-10 rounded" />
+              <div className="bg-[#7A6652] w-10 h-10 rounded" />
+              <div className="bg-[#3F4A3C] w-10 h-10 rounded" />
+              <div className="bg-[#B58B6A] w-10 h-10 rounded" />
+            </TabsContent>
+          </Tabs>
           <div className="py-2">
             <Button className="w-full">Add to Cart</Button>
           </div>
         </div>
         {/* Accordition */}
         <div>
-          <Accordion defaultValue={["shipping"]} className="w-full">
-            <AccordionItem value="shipping">
-              <AccordionTrigger >
-                What are your shipping options?
-              </AccordionTrigger>
+          <Accordion defaultValue={["features"]} className="w-full mb-20">
+            <AccordionItem value="features">
+              <AccordionTrigger>Core Features</AccordionTrigger>
               <AccordionContent>
-                We offer standard (5-7 days), express (2-3 days), and overnight
-                shipping. Free shipping on international orders.
+                <ul className="list-none space-y-2 pl-5 text-sm text-gray-700">
+                  <li>Half sleeves</li>
+                  <li>1× chest pocket</li>
+                  <li>Custom label at front-side hem</li>
+                  <li>“Skate Club” embroidery on the chest</li>
+                  <li>Turn-down collar</li>
+                  <li>Button-down style</li>
+                </ul>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="returns">
-              <AccordionTrigger>What is your return policy?</AccordionTrigger>
+              <AccordionTrigger>Description</AccordionTrigger>
               <AccordionContent>
-                Returns accepted within 30 days. Items must be unused and in
-                original packaging. Refunds processed within 5-7 business days.
+                Made from 100% cotton poplin, this unisex piece features a boxy
+                fit for a relaxed, contemporary look. Finished in Black, it’s
+                designed for versatile everyday wear. Made in India.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="shipping">
+              <AccordionTrigger>Shipping & Returns</AccordionTrigger>
+              <AccordionContent>
+                <section>
+                  <h3 className="mb-1 text-base font-semibold text-gray-900">
+                    Shipping
+                  </h3>
+
+                  <ul className="list-none space-y-2 pl-5 mb-4 text-gray-700">
+                    <li>Free shipping on orders above ₹500 within India</li>
+                    <li>Orders dispatched within 24–48 hours</li>
+                    <li>Metro cities: 2–5 working days after dispatch</li>
+                    <li>Rest of India: 4–7 working days after dispatch</li>
+                    <li className="pt-2 font-medium text-gray-900">
+                      Ships from Mumbai, Maharashtra
+                    </li>
+                  </ul>
+                </section>
+
+                {/* Returns */}
+                <section>
+                  <h3 className="mb-1 text-base font-semibold text-gray-900">
+                    Returns
+                  </h3>
+
+                  <h4 className="mb-1 font-medium  pl-5">Regular items</h4>
+
+                  <ul className="list-none space-y-2 pl-10 text-gray-700">
+                    <li>
+                      Returns & exchanges accepted within 7 days of receiving
+                    </li>
+                    <li>₹100 charge applies to all returns & exchanges</li>
+                    <li>
+                      Packs/bundles: size exchanges only (no returns), ₹100
+                      charge
+                    </li>
+                  </ul>
+
+                  <h4 className="mb-1 mt-1 font-medium  pl-5">Sale items</h4>
+
+                  <ul className="list-none space-y-2 pl-10 text-gray-700">
+                    <li>No returns or exchanges — except clothing</li>
+                    <li>
+                      Clothing only: exchange for a different size in the same
+                      or similar item, ₹100 shipping
+                    </li>
+                    <li>Price differences are paid by the customer</li>
+                    <li>
+                      Out of stock? Store credit valid for 3 months — no refunds
+                    </li>
+                  </ul>
+                </section>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="support">
-              <AccordionTrigger>
-                How can I contact customer support?
-              </AccordionTrigger>
+              <AccordionTrigger>Care Guilde</AccordionTrigger>
               <AccordionContent>
-                Reach us via email, live chat, or phone. We respond within 24
-                hours during business days.
+                <ul className="list-none space-y-2 text-sm text-gray-700 pl-5">
+                  <li>Do not bleach</li>
+                  <li>Do not iron on print, embroidery, or badge</li>
+                  <li>Please follow the care label provided on the garment</li>
+                </ul>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -91,7 +231,4 @@ const ProductPage = () => {
       </div>
     </div>
   );
-};
-
-export default ProductPage;
-
+}
