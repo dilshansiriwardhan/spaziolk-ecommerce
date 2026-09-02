@@ -33,6 +33,8 @@ export default async function ProductPage({
     },
   });
 
+  console.log(product);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-1 mb-20">
       <div className="mr-10">
@@ -43,10 +45,10 @@ export default async function ProductPage({
         <div className="flex justify-between">
           <div>
             <p>{product?.productName}</p>
-            <p>{product?.productType}</p>
+            <p>{product?.category?.name}</p>
           </div>
           <div className="text-right">
-            <p >{product?.productPrice} LKR</p>
+            <p>{product?.productPrice} LKR</p>
             <p>tax included</p>
           </div>
         </div>
@@ -125,8 +127,10 @@ export default async function ProductPage({
             </TabsContent>
           </Tabs>
           <div className="py-2">
+            <DrawerDemo
+              trigger={<div><Button className="w-full">Add to Cart</Button></div>}
+            />
             
-            <DrawerDemo/>
           </div>
         </div>
         {/* Accordition */}
@@ -136,7 +140,7 @@ export default async function ProductPage({
               <AccordionTrigger>Core Features</AccordionTrigger>
               <AccordionContent>
                 <ul className="list-none space-y-2 pl-5 text-sm text-gray-700">
-                  {product?.variants && product.variants.length > 0 && (
+                  {product?.features && product.features.length > 0 && (
                     <ul className="list-none space-y-2 pl-5 text-sm text-gray-700">
                       {product.features.map((feature) => (
                         <li key={feature.id}>{feature.name}</li>
@@ -148,9 +152,7 @@ export default async function ProductPage({
             </AccordionItem>
             <AccordionItem value="returns">
               <AccordionTrigger>Description</AccordionTrigger>
-              <AccordionContent>
-                {product?.description}
-              </AccordionContent>
+              <AccordionContent>{product?.description}</AccordionContent>
             </AccordionItem>
             <AccordionItem value="shipping">
               <AccordionTrigger>Shipping & Returns</AccordionTrigger>

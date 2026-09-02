@@ -76,7 +76,7 @@ async function seed() {
     clothingCategories.map((category) => [category.slug, category.id]),
   );
 
-  const subClothingCategories = await db.insert(categories).values([
+  await db.insert(categories).values([
     // Topwear
     {
       name: "T-Shirts",
@@ -278,10 +278,61 @@ async function seed() {
       slug: "robes",
       parentId: categoryMap.sleepwear,
     },
-  ]) .returning();
+  ]);
+
+  const subCategories = await db
+    .insert(categories)
+    .values([
+      {
+        name: "T-Shirts",
+        slug: "t-shirts",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Shirts",
+        slug: "shirts",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Jeans",
+        slug: "jeans",
+        parentId: categoryMap.bottomwear,
+      },
+      {
+        name: "Chinos",
+        slug: "chinos",
+        parentId: categoryMap.bottomwear,
+      },
+      {
+        name: "Hoodies",
+        slug: "hoodies",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Jackets",
+        slug: "jackets",
+        parentId: categoryMap.outerwear,
+      },
+      {
+        name: "Track Pants",
+        slug: "track-pants",
+        parentId: categoryMap.activewear,
+      },
+      {
+        name: "Boxers",
+        slug: "boxers",
+        parentId: categoryMap.innerwear,
+      },
+      {
+        name: "Pajamas",
+        slug: "pajamas",
+        parentId: categoryMap.sleepwear,
+      },
+    ])
+    .returning();
 
   const subCategoryMap = Object.fromEntries(
-    subClothingCategories.map((category) => [category.slug, category.id]),
+    subCategories.map((category) => [category.slug, category.id]),
   );
 
   const clothingProducts = await db
@@ -296,7 +347,7 @@ async function seed() {
         compareAtPrice: 29.99,
         isActive: true,
         isFeatured: false,
-        categoryId: subCategoryMap["t-shirts"],
+        categoryId: categoryMap["t-shirts"],
       },
       {
         productName: "Oxford Casual Shirt",
@@ -307,7 +358,7 @@ async function seed() {
         compareAtPrice: 49.99,
         isActive: true,
         isFeatured: true,
-        categoryId: subCategoryMap["shirts"],
+        categoryId: categoryMap["shirts"],
       },
       {
         productName: "Slim Fit Chinos",
@@ -318,7 +369,7 @@ async function seed() {
         compareAtPrice: 59.99,
         isActive: true,
         isFeatured: true,
-        categoryId: subCategoryMap["chinos"],
+        categoryId: categoryMap["chinos"],
       },
       {
         productName: "Classic Denim Jeans",
@@ -329,7 +380,7 @@ async function seed() {
         compareAtPrice: 79.99,
         isActive: true,
         isFeatured: false,
-        categoryId: subCategoryMap["jeans"],
+        categoryId: categoryMap["jeans"],
       },
       {
         productName: "Oversized Fleece Hoodie",
@@ -340,7 +391,7 @@ async function seed() {
         compareAtPrice: 69.99,
         isActive: true,
         isFeatured: true,
-        categoryId: subCategoryMap["hoodies"],
+        categoryId: categoryMap["hoodies"],
       },
       {
         productName: "Classic Denim Jacket",
@@ -351,7 +402,7 @@ async function seed() {
         compareAtPrice: 99.99,
         isActive: true,
         isFeatured: false,
-        categoryId: subCategoryMap["jackets"],
+        categoryId: categoryMap["jackets"],
       },
       {
         productName: "Relaxed Cargo Pants",
@@ -362,7 +413,7 @@ async function seed() {
         compareAtPrice: 64.99,
         isActive: true,
         isFeatured: false,
-        categoryId: subCategoryMap["cargo-pants"],
+        categoryId: categoryMap["cargo-pants"],
       },
       {
         productName: "Performance Track Pants",
@@ -374,7 +425,7 @@ async function seed() {
         compareAtPrice: 54.99,
         isActive: true,
         isFeatured: false,
-        categoryId: subCategoryMap["track-pants"],
+        categoryId: categoryMap["track-pants"],
       },
       {
         productName: "Premium Cotton Boxers",
@@ -385,7 +436,7 @@ async function seed() {
         compareAtPrice: 24.99,
         isActive: true,
         isFeatured: false,
-        categoryId: subCategoryMap["boxers"],
+        categoryId: categoryMap["boxers"],
       },
       {
         productName: "Soft Cotton Pajama Set",
@@ -397,7 +448,7 @@ async function seed() {
         compareAtPrice: 44.99,
         isActive: true,
         isFeatured: true,
-        categoryId: subCategoryMap["pajamas"],
+        categoryId: categoryMap["pajamas"],
       },
     ])
     .returning();

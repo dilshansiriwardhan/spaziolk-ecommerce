@@ -1,12 +1,10 @@
-"use client"
-
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
 import {
   CircleAlertIcon,
   CircleCheckIcon,
   CircleDashedIcon,
-} from "lucide-react"
+} from "lucide-react";
 
 import {
   NavigationMenu,
@@ -16,7 +14,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
+
+import { isNull } from "drizzle-orm";
+import { db } from "@/db";
+import { categories } from "@/db/schema";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -54,29 +56,37 @@ const components: { title: string; href: string; description: string }[] = [
     description:
       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
   },
-]
+];
 
-export function NavigationMenuDemo() {
+export async function NavigationMenuDemo() {
+  const categoryTree = await db.query.categories.findMany({
+    where: isNull(categories.parentId),
+    with: {
+      children: true,
+    },
+  });
+
+  console.log(categoryTree);
+
   return (
-    <NavigationMenu >
-      <NavigationMenuList className={'gap-10'}>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="w-96">
-              <ListItem href="/docs" title="Introduction">
-                Re-usable components built with Tailwind CSS.
-              </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem className="hidden md:flex">
+    <NavigationMenu>
+      <NavigationMenuList className={"gap-10"}>
+        {categoryTree.map((category) => (
+          <NavigationMenuItem key={category.id}>
+            <NavigationMenuTrigger >{category.name}</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              {category.children.map((subCategory) => (
+                <ul className="w-96" key={subCategory.id}>
+                  <ListItem href="/docs" title={subCategory.name ?? ""}>
+                    {subCategory.description}
+                  </ListItem>
+                </ul>
+              ))}
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        ))}
+
+        {/* <NavigationMenuItem className="hidden md:flex">
           <NavigationMenuTrigger>Components</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
@@ -97,19 +107,43 @@ export function NavigationMenuDemo() {
           <NavigationMenuContent>
             <ul className="grid w-[200px]">
               <li>
-                <NavigationMenuLink render={<Link href="#" className="flex-row items-center gap-2"><CircleAlertIcon />Backlog</Link>} />
-                <NavigationMenuLink render={<Link href="#" className="flex-row items-center gap-2"><CircleDashedIcon />To Do</Link>} />
-                <NavigationMenuLink render={<Link href="#" className="flex-row items-center gap-2"><CircleCheckIcon />Done</Link>} />
+                <NavigationMenuLink
+                  render={
+                    <Link href="#" className="flex-row items-center gap-2">
+                      <CircleAlertIcon />
+                      Backlog
+                    </Link>
+                  }
+                />
+                <NavigationMenuLink
+                  render={
+                    <Link href="#" className="flex-row items-center gap-2">
+                      <CircleDashedIcon />
+                      To Do
+                    </Link>
+                  }
+                />
+                <NavigationMenuLink
+                  render={
+                    <Link href="#" className="flex-row items-center gap-2">
+                      <CircleCheckIcon />
+                      Done
+                    </Link>
+                  }
+                />
               </li>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()} render={<Link href="/docs">Docs</Link>} />
-        </NavigationMenuItem>
+          <NavigationMenuLink
+            className={navigationMenuTriggerStyle()}
+            render={<Link href="/docs">Docs</Link>}
+          />
+        </NavigationMenuItem>*/}
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 }
 
 function ListItem({
@@ -120,10 +154,18 @@ function ListItem({
 }: React.ComponentPropsWithoutRef<"li"> & { href: string }) {
   return (
     <li {...props}>
-      <NavigationMenuLink render={<Link href={href}><div className="flex flex-col gap-1 text-sm">
-          <div className="leading-none font-medium">{title}</div>
-          <div className="line-clamp-2 text-muted-foreground">{children}</div>
-        </div></Link>} />
+      <NavigationMenuLink
+        render={
+          <Link href={href}>
+            <div className="flex flex-col gap-1 text-sm">
+              <div className="leading-none font-medium">{title}</div>
+              <div className="line-clamp-2 text-muted-foreground">
+                {children}
+              </div>
+            </div>
+          </Link>
+        }
+      />
     </li>
-  )
+  );
 }

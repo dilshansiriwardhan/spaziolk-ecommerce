@@ -168,7 +168,6 @@ export const categoriesRelations = relations(categories, ({ one, many }) => ({
   products: many(products),
 }));
 
-
 export const productImagesRelations = relations(productImages, ({ one }) => ({
   product: one(products, {
     fields: [productImages.productId],
@@ -208,3 +207,5 @@ export const addressesRelations = relations(addresses, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+

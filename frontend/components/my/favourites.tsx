@@ -62,7 +62,7 @@ type DrawerDemoProps = {
   trigger: React.ReactElement;
 };
 
-export function DrawerDemo({ trigger }: DrawerDemoProps) {
+export function Favourites({ trigger }: DrawerDemoProps) {
   const [open, setOpen] = React.useState(false)
   const [deliveryTime, setDeliveryTime] = React.useState("asap")
   const isMobile = useIsMobile()

@@ -53,7 +53,7 @@ function Drawer({
 }
 
 function DrawerTrigger({ ...props }: DrawerPrimitive.Trigger.Props) {
-  return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} />
+  return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} nativeButton={false}/>
 }
 
 function DrawerPortal({ ...props }: DrawerPrimitive.Portal.Props) {

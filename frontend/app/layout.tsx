@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
 import ProductSearch from "@/components/my/product-search";
+import { DrawerDemo } from "@/components/my/drawer";
+import { Favourites } from "@/components/my/favourites";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -59,8 +61,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <div>
                 <div className="flex items-center gap-5">
                   <UserRound className="h-5 w-5" />
-                  <Heart className="h-5 w-5" />
-                  <ShoppingCart className="h-5 w-5" />
+
+                  <Favourites trigger={<Heart className="h-5 w-5" />} />
+                  <DrawerDemo trigger={<ShoppingCart className="h-5 w-5" />} />
                   <AnimatedThemeToggler />
                 </div>
               </div>

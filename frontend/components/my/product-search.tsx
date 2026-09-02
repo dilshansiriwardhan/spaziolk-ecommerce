@@ -46,22 +46,18 @@ export default function ProductSearch() {
     return () => clearTimeout(t);
   }, [query]);
 
-  
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       {/* Base UI: render prop instead of asChild */}
       <PopoverTrigger
         render={
-          <div className="w-100">
-            <Input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products..."
-              className="w-full max-w-xl"
-            />
-          </div>
+          <Input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search products..."
+            className="w-100 max-w-xl"
+          />
         }
       />
 
@@ -83,13 +79,15 @@ export default function ProductSearch() {
         ) : (
           <div className="grid max-h-[70vh] gap-3 overflow-y-auto sm:grid-cols-2 md:grid-cols-1">
             {results.map((p) => (
-                
               <SearchItem
                 key={p.id}
                 id={p.id}
                 productName={p.productName}
                 productPrice={p.productPrice}
-                imageSrc={p.imageUrl ?? "https://www.fffuel.co/images/dddepth-preview/dddepth-051.jpg"}
+                imageSrc={
+                  p.imageUrl ??
+                  "https://www.fffuel.co/images/dddepth-preview/dddepth-051.jpg"
+                }
               />
             ))}
           </div>
