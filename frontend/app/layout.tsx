@@ -10,6 +10,7 @@ import { Heart, ShoppingCart, UserRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
+import ProductSearch from "@/components/my/product-search";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               {/* logo */}
               <div>
                 <div className="relative h-5 w-auto ">
-                  <Link href={'/'}>
+                  <Link href={"/"}>
                     <Image
                       src="/company-logo.svg"
                       alt="Product"
@@ -49,9 +50,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </div>
 
               {/* //search */}
-              <div className="w-100">
+              {/* <div className="w-100">
                 <Input placeholder="Search for Products" />
-              </div>
+              </div> */}
+              <ProductSearch />
 
               {/* //profile,fav,cart */}
               <div>

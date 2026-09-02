@@ -13,6 +13,7 @@ import CarouselWithThumbs from "@/components/my/d";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import * as schema from "@/db/schema";
+import { DrawerDemo } from "@/components/my/drawer";
 
 export default async function ProductPage({
   params,
@@ -33,19 +34,11 @@ export default async function ProductPage({
   });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 w-full px-20 gap-1">
-      <div className="mx-10">
-        {/* <Image
-          src="/products/002.webp"
-          alt="Product"
-          width={1584}
-          height={396}
-          className="w-full h-auto"
-          priority
-        /> */}
-        <CarouselWithThumbs images={product?.images?.map((image) => image.url) ?? []}/>
+    <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-1 mb-20">
+      <div className="mr-10">
+        <CarouselWithThumbs />
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 pl-5s">
         <div>{product?.reviews.length} reviews </div>
         <div className="flex justify-between">
           <div>
@@ -132,7 +125,8 @@ export default async function ProductPage({
             </TabsContent>
           </Tabs>
           <div className="py-2">
-            <Button className="w-full">Add to Cart</Button>
+            
+            <DrawerDemo/>
           </div>
         </div>
         {/* Accordition */}
