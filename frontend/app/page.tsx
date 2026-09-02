@@ -5,35 +5,14 @@ import { products, productImages } from "@/db/schema";
 import { desc, inArray, asc } from "drizzle-orm";
 
 export default async function Home() {
-  const allProducts = await db
-    .select()
-    .from(products)
-    .orderBy(desc(products.createdAt))
-    .limit(10);
-
-  const productIds = allProducts.map((p) => p.id);
-
-  const images =
-    productIds.length === 0
-      ? []
-      : await db
-          .select({
-            productId: productImages.productId,
-            url: productImages.url,
-          })
-          .from(productImages)
-          .where(inArray(productImages.productId, productIds))
-          .orderBy(asc(productImages.position));
-
-  const imagesByProductId = images.reduce<Record<string, string[]>>(
-    (acc, img) => {
-      if (!acc[img.productId]) acc[img.productId] = [];
-      acc[img.productId].push(img.url);
-      return acc;
+  const allProducts = await db.query.products.findMany({
+    limit: 8,
+    with: {
+      images: true,
+      reviews: true,
     },
-    {},
-  );
-
+  });
+  console.log(allProducts);
   return (
     <div>
       {/* Main Banner */}
@@ -59,7 +38,7 @@ export default async function Home() {
               <ProductCard
                 key={product.id}
                 id={product.id}
-                imageSrc={imagesByProductId[product.id][0]}
+                imageSrc={product.images[0].url}
                 productName={product.productName}
                 productPrice={product.productPrice}
               />

@@ -73,12 +73,15 @@ export async function NavigationMenuDemo() {
       <NavigationMenuList className={"gap-10"}>
         {categoryTree.map((category) => (
           <NavigationMenuItem key={category.id}>
-            <NavigationMenuTrigger >{category.name}</NavigationMenuTrigger>
+            <NavigationMenuTrigger>{category.name}</NavigationMenuTrigger>
             <NavigationMenuContent>
               {category.children.map((subCategory) => (
                 <ul className="w-96" key={subCategory.id}>
-                  <ListItem href="/docs" title={subCategory.name ?? ""}>
-                    {subCategory.description}
+                  <ListItem
+                    href={`/${subCategory.slug}`}
+                    title={subCategory.name ?? ""}
+                  >
+                    {subCategory.productCount}
                   </ListItem>
                 </ul>
               ))}

@@ -28,6 +28,7 @@ export const categories = pgTable(
     description: text("description"),
     image: text("image"),
     parentId: text("parent_id"),
+    productCount: integer("product_count").notNull().default(0),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
