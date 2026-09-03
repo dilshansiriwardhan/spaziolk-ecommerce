@@ -28,40 +28,6 @@ import { useEffect } from "react";
 import { getCartAction } from "@/app/actions/add-to-cart";
 import type { Cart } from "@/lib/add-cart";
 
-const deliveryTimes = [
-  {
-    value: "asap",
-    id: "delivery-asap",
-    label: "Standard delivery",
-    description: "25–35 min · Driver assigned now",
-    badge: "Fastest",
-  },
-  {
-    value: "5-00",
-    id: "delivery-5-00",
-    label: "5:00 PM – 5:15 PM",
-    description: "Prep starts at 4:45 PM",
-  },
-  {
-    value: "5-30",
-    id: "delivery-5-30",
-    label: "5:30 PM – 5:45 PM",
-    description: "Good if you're heading home",
-  },
-  {
-    value: "6-00",
-    id: "delivery-6-00",
-    label: "6:00 PM – 6:15 PM",
-    description: "Most popular · High demand",
-  },
-  {
-    value: "6-30",
-    id: "delivery-6-30",
-    label: "6:30 PM – 6:45 PM",
-    description: "Last slot before kitchen closes",
-  },
-];
-
 type DrawerDemoProps = {
   trigger: React.ReactElement;
 };
@@ -80,18 +46,11 @@ export function DrawerDemo({ trigger }: DrawerDemoProps) {
     }
   }, [open]);
 
-  function handleConfirm() {
-    const selected = deliveryTimes.find((time) => time.value === deliveryTime);
-
-    if (!selected) {
-      return;
-    }
-
-    setOpen(false);
-    toast("Delivery time confirmed", {
-      description: selected.label,
-    });
-  }
+  const total =
+    (cart?.items.reduce(
+      (sum, item) => sum + Number(item.product.productPrice) * item.quantity,
+      0,
+    ) ?? 0).toFixed(2);
 
   return (
     <Drawer
@@ -104,14 +63,11 @@ export function DrawerDemo({ trigger }: DrawerDemoProps) {
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Cart</DrawerTitle>
-          <DrawerDescription>
-            This is your cart Item section
-          </DrawerDescription>
+          <DrawerDescription>{total} LKR</DrawerDescription>
         </DrawerHeader>
         <div className="flex-1 scroll-fade overflow-y-auto p-4">
           <RadioGroup
             value={cart}
-            onValueChange={setDeliveryTime}
             className="gap-2"
           >
             {cart?.items.map((item) => (
@@ -133,7 +89,7 @@ export function DrawerDemo({ trigger }: DrawerDemoProps) {
           </RadioGroup>
         </div>
         <DrawerFooter>
-          <Button onClick={handleConfirm} className="h-[34px]">
+          <Button className="h-[34px]">
             Proceed to Payment
           </Button>
           <DrawerClose render={<Button variant="outline">Cancel</Button>} />

@@ -13,6 +13,7 @@ import Link from "next/link";
 import ProductSearch from "@/components/my/product-search";
 import { DrawerDemo } from "@/components/my/drawer";
 import { Favourites } from "@/components/my/favourites";
+import { Footer } from "@/components/my/footer";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -72,11 +73,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <NavigationMenuDemo />
             </div>
             <div>{children}</div>
-            <div className="bg-muted-foreground/5 flex justify-between p-10">
-              <List />
-              <List />
-              <List />
-              <List />
+            <div className="w-full bg-muted-foreground/5 flex justify-between p-10">
+              <Footer/>
             </div>
           </div>
         </ThemeProvider>

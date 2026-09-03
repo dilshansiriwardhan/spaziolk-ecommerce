@@ -12,6 +12,7 @@ import {
   reviews,
   addresses,
 } from "./schema";
+import { portraitImages } from "./images";
 
 const client = postgres(process.env.DATABASE_URL!);
 const db = drizzle(client);
@@ -76,209 +77,212 @@ async function seed() {
     clothingCategories.map((category) => [category.slug, category.id]),
   );
 
-  const subClothingCategories = await db.insert(categories).values([
-    // Topwear
-    {
-      name: "T-Shirts",
-      slug: "t-shirts",
-      parentId: categoryMap.topwear,
-    },
-    {
-      name: "Shirts",
-      slug: "shirts",
-      parentId: categoryMap.topwear,
-    },
-    {
-      name: "Polos",
-      slug: "polos",
-      parentId: categoryMap.topwear,
-    },
-    {
-      name: "Tank Tops",
-      slug: "tank-tops",
-      parentId: categoryMap.topwear,
-    },
-    {
-      name: "Blouses",
-      slug: "blouses",
-      parentId: categoryMap.topwear,
-    },
-    {
-      name: "Crop Tops",
-      slug: "crop-tops",
-      parentId: categoryMap.topwear,
-    },
-    {
-      name: "Sweaters",
-      slug: "sweaters",
-      parentId: categoryMap.topwear,
-    },
-    {
-      name: "Hoodies",
-      slug: "hoodies",
-      parentId: categoryMap.topwear,
-    },
+  const subClothingCategories = await db
+    .insert(categories)
+    .values([
+      // Topwear
+      {
+        name: "T-Shirts",
+        slug: "t-shirts",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Shirts",
+        slug: "shirts",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Polos",
+        slug: "polos",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Tank Tops",
+        slug: "tank-tops",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Blouses",
+        slug: "blouses",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Crop Tops",
+        slug: "crop-tops",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Sweaters",
+        slug: "sweaters",
+        parentId: categoryMap.topwear,
+      },
+      {
+        name: "Hoodies",
+        slug: "hoodies",
+        parentId: categoryMap.topwear,
+      },
 
-    // Bottomwear
-    {
-      name: "Jeans",
-      slug: "jeans",
-      parentId: categoryMap.bottomwear,
-    },
-    {
-      name: "Trousers",
-      slug: "trousers",
-      parentId: categoryMap.bottomwear,
-    },
-    {
-      name: "Chinos",
-      slug: "chinos",
-      parentId: categoryMap.bottomwear,
-    },
-    {
-      name: "Shorts",
-      slug: "shorts",
-      parentId: categoryMap.bottomwear,
-    },
-    {
-      name: "Cargo Pants",
-      slug: "cargo-pants",
-      parentId: categoryMap.bottomwear,
-    },
-    {
-      name: "Leggings",
-      slug: "leggings",
-      parentId: categoryMap.bottomwear,
-    },
-    {
-      name: "Skirts",
-      slug: "skirts",
-      parentId: categoryMap.bottomwear,
-    },
+      // Bottomwear
+      {
+        name: "Jeans",
+        slug: "jeans",
+        parentId: categoryMap.bottomwear,
+      },
+      {
+        name: "Trousers",
+        slug: "trousers",
+        parentId: categoryMap.bottomwear,
+      },
+      {
+        name: "Chinos",
+        slug: "chinos",
+        parentId: categoryMap.bottomwear,
+      },
+      {
+        name: "Shorts",
+        slug: "shorts",
+        parentId: categoryMap.bottomwear,
+      },
+      {
+        name: "Cargo Pants",
+        slug: "cargo-pants",
+        parentId: categoryMap.bottomwear,
+      },
+      {
+        name: "Leggings",
+        slug: "leggings",
+        parentId: categoryMap.bottomwear,
+      },
+      {
+        name: "Skirts",
+        slug: "skirts",
+        parentId: categoryMap.bottomwear,
+      },
 
-    // Outerwear
-    {
-      name: "Jackets",
-      slug: "jackets",
-      parentId: categoryMap.outerwear,
-    },
-    {
-      name: "Coats",
-      slug: "coats",
-      parentId: categoryMap.outerwear,
-    },
-    {
-      name: "Blazers",
-      slug: "blazers",
-      parentId: categoryMap.outerwear,
-    },
-    {
-      name: "Trench Coats",
-      slug: "trench-coats",
-      parentId: categoryMap.outerwear,
-    },
-    {
-      name: "Windbreakers",
-      slug: "windbreakers",
-      parentId: categoryMap.outerwear,
-    },
-    {
-      name: "Vests",
-      slug: "vests",
-      parentId: categoryMap.outerwear,
-    },
+      // Outerwear
+      {
+        name: "Jackets",
+        slug: "jackets",
+        parentId: categoryMap.outerwear,
+      },
+      {
+        name: "Coats",
+        slug: "coats",
+        parentId: categoryMap.outerwear,
+      },
+      {
+        name: "Blazers",
+        slug: "blazers",
+        parentId: categoryMap.outerwear,
+      },
+      {
+        name: "Trench Coats",
+        slug: "trench-coats",
+        parentId: categoryMap.outerwear,
+      },
+      {
+        name: "Windbreakers",
+        slug: "windbreakers",
+        parentId: categoryMap.outerwear,
+      },
+      {
+        name: "Vests",
+        slug: "vests",
+        parentId: categoryMap.outerwear,
+      },
 
-    // Activewear
-    {
-      name: "Sports T-Shirts",
-      slug: "sports-t-shirts",
-      parentId: categoryMap.activewear,
-    },
-    {
-      name: "Sports Shorts",
-      slug: "sports-shorts",
-      parentId: categoryMap.activewear,
-    },
-    {
-      name: "Track Pants",
-      slug: "track-pants",
-      parentId: categoryMap.activewear,
-    },
-    {
-      name: "Sports Leggings",
-      slug: "sports-leggings",
-      parentId: categoryMap.activewear,
-    },
-    {
-      name: "Sports Bras",
-      slug: "sports-bras",
-      parentId: categoryMap.activewear,
-    },
-    {
-      name: "Tracksuits",
-      slug: "tracksuits",
-      parentId: categoryMap.activewear,
-    },
+      // Activewear
+      {
+        name: "Sports T-Shirts",
+        slug: "sports-t-shirts",
+        parentId: categoryMap.activewear,
+      },
+      {
+        name: "Sports Shorts",
+        slug: "sports-shorts",
+        parentId: categoryMap.activewear,
+      },
+      {
+        name: "Track Pants",
+        slug: "track-pants",
+        parentId: categoryMap.activewear,
+      },
+      {
+        name: "Sports Leggings",
+        slug: "sports-leggings",
+        parentId: categoryMap.activewear,
+      },
+      {
+        name: "Sports Bras",
+        slug: "sports-bras",
+        parentId: categoryMap.activewear,
+      },
+      {
+        name: "Tracksuits",
+        slug: "tracksuits",
+        parentId: categoryMap.activewear,
+      },
 
-    // Innerwear
-    {
-      name: "Underwear",
-      slug: "underwear",
-      parentId: categoryMap.innerwear,
-    },
-    {
-      name: "Bras",
-      slug: "bras",
-      parentId: categoryMap.innerwear,
-    },
-    {
-      name: "Boxers",
-      slug: "boxers",
-      parentId: categoryMap.innerwear,
-    },
-    {
-      name: "Briefs",
-      slug: "briefs",
-      parentId: categoryMap.innerwear,
-    },
-    {
-      name: "Undershirts",
-      slug: "undershirts",
-      parentId: categoryMap.innerwear,
-    },
-    {
-      name: "Camisoles",
-      slug: "camisoles",
-      parentId: categoryMap.innerwear,
-    },
+      // Innerwear
+      {
+        name: "Underwear",
+        slug: "underwear",
+        parentId: categoryMap.innerwear,
+      },
+      {
+        name: "Bras",
+        slug: "bras",
+        parentId: categoryMap.innerwear,
+      },
+      {
+        name: "Boxers",
+        slug: "boxers",
+        parentId: categoryMap.innerwear,
+      },
+      {
+        name: "Briefs",
+        slug: "briefs",
+        parentId: categoryMap.innerwear,
+      },
+      {
+        name: "Undershirts",
+        slug: "undershirts",
+        parentId: categoryMap.innerwear,
+      },
+      {
+        name: "Camisoles",
+        slug: "camisoles",
+        parentId: categoryMap.innerwear,
+      },
 
-    // Sleepwear
-    {
-      name: "Pajamas",
-      slug: "pajamas",
-      parentId: categoryMap.sleepwear,
-    },
-    {
-      name: "Nightgowns",
-      slug: "nightgowns",
-      parentId: categoryMap.sleepwear,
-    },
-    {
-      name: "Sleep Shirts",
-      slug: "sleep-shirts",
-      parentId: categoryMap.sleepwear,
-    },
-    {
-      name: "Sleep Shorts",
-      slug: "sleep-shorts",
-      parentId: categoryMap.sleepwear,
-    },
-    {
-      name: "Robes",
-      slug: "robes",
-      parentId: categoryMap.sleepwear,
-    },
-  ]) .returning();
+      // Sleepwear
+      {
+        name: "Pajamas",
+        slug: "pajamas",
+        parentId: categoryMap.sleepwear,
+      },
+      {
+        name: "Nightgowns",
+        slug: "nightgowns",
+        parentId: categoryMap.sleepwear,
+      },
+      {
+        name: "Sleep Shirts",
+        slug: "sleep-shirts",
+        parentId: categoryMap.sleepwear,
+      },
+      {
+        name: "Sleep Shorts",
+        slug: "sleep-shorts",
+        parentId: categoryMap.sleepwear,
+      },
+      {
+        name: "Robes",
+        slug: "robes",
+        parentId: categoryMap.sleepwear,
+      },
+    ])
+    .returning();
 
   const subCategoryMap = Object.fromEntries(
     subClothingCategories.map((category) => [category.slug, category.id]),
@@ -453,10 +457,19 @@ async function seed() {
   ]);
 
   // Images for all 10 products
+  // await db.insert(productImages).values(
+  //   clothingProducts.map((product) => ({
+  //     productId: product.id,
+  //     url: `https://placehold.co/400x600?text=${encodeURIComponent(product.productName)}`,
+  //     alt: product.productName,
+  //     position: 0,
+  //   })),
+  // );
+
   await db.insert(productImages).values(
-    clothingProducts.map((product) => ({
+    clothingProducts.map((product, index) => ({
       productId: product.id,
-      url: `https://placehold.co/400x600?text=${encodeURIComponent(product.productName)}`,
+      url: portraitImages[index],
       alt: product.productName,
       position: 0,
     })),

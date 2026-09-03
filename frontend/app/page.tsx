@@ -3,6 +3,7 @@ import ProductCard from "@/components/my/product-card";
 import { db } from "@/db";
 import { products, productImages } from "@/db/schema";
 import { desc, inArray, asc } from "drizzle-orm";
+import { searchPexelsPhotos } from "./actions/unsplash";
 
 export default async function Home() {
   const allProducts = await db.query.products.findMany({
@@ -13,6 +14,11 @@ export default async function Home() {
     },
   });
   console.log(allProducts);
+
+  const data = await searchPexelsPhotos("streetwear fashion", 10);
+  const images = data?.photos;
+  console.log();
+
   return (
     <div>
       {/* Main Banner */}
@@ -41,6 +47,7 @@ export default async function Home() {
                 imageSrc={product.images[0].url}
                 productName={product.productName}
                 productPrice={product.productPrice}
+                isFeatured={product.isFeatured}
               />
             ))}
           </div>

@@ -12,21 +12,21 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "../ui/card";
 
-const images = [
-  "https://www.fffuel.co/images/dddepth-preview/dddepth-248.jpg",
-  "https://www.fffuel.co/images/dddepth-preview/dddepth-051.jpg",
-  "https://www.fffuel.co/images/dddepth-preview/dddepth-029.jpg",
-  "https://www.fffuel.co/images/dddepth-preview/dddepth-038.jpg",
-  "https://www.fffuel.co/images/dddepth-preview/dddepth-012.jpg",
-];
-
 type CauroselProps = {
-  images: string[];
+  image: string;
   //{images}:CauroselProps
 };
-export default function CarouselWithThumbs() {
+export default function CarouselWithThumbs({ image }: CauroselProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
+
+  const images = [
+    image,
+    "https://www.fffuel.co/images/dddepth-preview/dddepth-051.jpg",
+    "https://www.fffuel.co/images/dddepth-preview/dddepth-029.jpg",
+    "https://www.fffuel.co/images/dddepth-preview/dddepth-038.jpg",
+    "https://www.fffuel.co/images/dddepth-preview/dddepth-012.jpg",
+  ];
 
   React.useEffect(() => {
     if (!api) return;
@@ -47,7 +47,7 @@ export default function CarouselWithThumbs() {
     (index: number) => {
       api?.scrollTo(index);
     },
-    
+
     [api],
   );
 
@@ -105,7 +105,11 @@ export default function CarouselWithThumbs() {
         </CarouselContent>
       </Carousel>
 
-      <Carousel className="w-full h-[700px] overflow-hidden" setApi={setApi} orientation="vertical">
+      <Carousel
+        className="w-full h-[700px] overflow-hidden"
+        setApi={setApi}
+        orientation="vertical"
+      >
         <CarouselContent className="h-[700px]">
           {images.map((image) => (
             <CarouselItem key={image}>

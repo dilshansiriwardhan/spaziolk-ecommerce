@@ -11,9 +11,11 @@ type ProductCardProps = {
   productName: string;
   productPrice: number;
   imageSrc?: string;
+  isFeatured: boolean;
 };
 
 const ProductCard = ({
+  isFeatured,
   id,
   productName,
   productPrice,
@@ -43,7 +45,12 @@ const ProductCard = ({
       </Link>
       <div className="p-2">
         <p className="flex justify-between">
-          {productName} <Star className="w-5" onClick={handleAddToFav} />
+          {productName}{" "}
+          {isFeatured ? (
+            <Star className="w-5 fill" onClick={handleAddToFav} />
+          ) : (
+            <Star className="w-5 fill-black" onClick={handleAddToFav} />
+          )}
         </p>
         <p>{productPrice} LKR</p>
       </div>

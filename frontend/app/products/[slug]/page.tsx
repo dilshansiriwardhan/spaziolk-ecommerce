@@ -37,7 +37,7 @@ export default async function ProductPage({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-1 mb-20">
       <div className="mr-10">
-        <CarouselWithThumbs />
+        <CarouselWithThumbs image={product?.images[0].url ?? ""}/>
       </div>
       <div className="flex flex-col gap-3 pl-5s">
         <div>{product?.reviews.length} reviews </div>
