@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { toast } from "sonner"
+import * as React from "react";
+import { toast } from "sonner";
 
-import { useIsMobile } from "@/hooks/use-mobile"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -15,15 +15,18 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
+} from "@/components/ui/drawer";
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldLabel,
   FieldTitle,
-} from "@/components/ui/field"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+} from "@/components/ui/field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useEffect } from "react";
+import { getCartAction } from "@/app/actions/add-to-cart";
+import type { Cart } from "@/lib/add-cart";
 
 const deliveryTimes = [
   {
@@ -57,31 +60,38 @@ const deliveryTimes = [
     label: "6:30 PM – 6:45 PM",
     description: "Last slot before kitchen closes",
   },
-]
+];
+
 type DrawerDemoProps = {
   trigger: React.ReactElement;
 };
 
 export function DrawerDemo({ trigger }: DrawerDemoProps) {
-  const [open, setOpen] = React.useState(false)
-  const [deliveryTime, setDeliveryTime] = React.useState("asap")
-  const isMobile = useIsMobile()
+  const [open, setOpen] = React.useState(false);
+  const [deliveryTime, setDeliveryTime] = React.useState("asap");
+  const isMobile = useIsMobile();
+
+  const [cart, setCart] = React.useState<Cart>(null);
+
+  useEffect(() => {
+    if (open) {
+      getCartAction().then(setCart);
+      console.log(cart);
+    }
+  }, [open]);
 
   function handleConfirm() {
-    const selected = deliveryTimes.find((time) => time.value === deliveryTime)
+    const selected = deliveryTimes.find((time) => time.value === deliveryTime);
 
     if (!selected) {
-      return
+      return;
     }
 
-    setOpen(false)
+    setOpen(false);
     toast("Delivery time confirmed", {
       description: selected.label,
-    })
+    });
   }
-
-  
-
 
   return (
     <Drawer
@@ -90,33 +100,33 @@ export function DrawerDemo({ trigger }: DrawerDemoProps) {
       showSwipeHandle={isMobile}
       swipeDirection={isMobile ? "down" : "right"}
     >
-      <DrawerTrigger render={trigger} nativeButton = {false}/>
+      <DrawerTrigger render={trigger} nativeButton={false} />
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Pick a delivery time</DrawerTitle>
+          <DrawerTitle>Cart</DrawerTitle>
           <DrawerDescription>
-            We&apos;ll prepare your order as soon as possible.
+            This is your cart Item section
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex-1 scroll-fade overflow-y-auto p-4">
           <RadioGroup
-            value={deliveryTime}
+            value={cart}
             onValueChange={setDeliveryTime}
             className="gap-2"
           >
-            {deliveryTimes.map((time) => (
-              <FieldLabel key={time.value} htmlFor={time.id}>
+            {cart?.items.map((item) => (
+              <FieldLabel key={item.id} htmlFor={item.id}>
                 <Field orientation="horizontal">
                   <FieldContent>
                     <FieldTitle className="flex items-center gap-2">
-                      {time.label}
-                      {time.badge ? (
-                        <Badge variant="secondary">{time.badge}</Badge>
+                      {item.product.productName}
+                      {item.variant ? (
+                        <Badge variant="secondary">{item.variant.color}</Badge>
                       ) : null}
                     </FieldTitle>
-                    <FieldDescription>{time.description}</FieldDescription>
+                    <FieldDescription>{item.quantity}</FieldDescription>
                   </FieldContent>
-                  <RadioGroupItem value={time.value} id={time.id} />
+                  <RadioGroupItem value={item.cartId} id={item.id} />
                 </Field>
               </FieldLabel>
             ))}
@@ -124,11 +134,11 @@ export function DrawerDemo({ trigger }: DrawerDemoProps) {
         </div>
         <DrawerFooter>
           <Button onClick={handleConfirm} className="h-[34px]">
-            Confirm Delivery Time
+            Proceed to Payment
           </Button>
           <DrawerClose render={<Button variant="outline">Cancel</Button>} />
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }

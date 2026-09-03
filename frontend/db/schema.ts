@@ -142,10 +142,104 @@ export const addresses = pgTable(
   (t) => [index("addresses_user_id_idx").on(t.userId)]
 );
 
+
+export const carts = pgTable(
+  "carts",
+  {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id").notNull(), // one cart per user
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("carts_user_id_uidx").on(t.userId), // one cart per user
+    index("carts_user_id_idx").on(t.userId),
+  ]
+);
+
+export const cartItems = pgTable(
+  "cart_items",
+  {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    cartId: text("cart_id").notNull(),
+    productId: text("product_id").notNull(),
+    variantId: text("variant_id"), // nullable if product has no variants
+    quantity: integer("quantity").notNull().default(1),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => [
+    index("cart_items_cart_id_idx").on(t.cartId),
+    index("cart_items_product_id_idx").on(t.productId),
+    index("cart_items_variant_id_idx").on(t.variantId),
+    // Prevent duplicate product+variant in the same cart
+    uniqueIndex("cart_items_cart_product_variant_uidx").on(
+      t.cartId,
+      t.productId,
+      t.variantId
+    ),
+  ]
+);
+
+export const favourites = pgTable(
+  "favourites",
+  {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id").notNull(),
+    productId: text("product_id").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [
+    // A user can favourite a product only once
+    uniqueIndex("favourites_user_product_uidx").on(t.userId, t.productId),
+    index("favourites_user_id_idx").on(t.userId),
+    index("favourites_product_id_idx").on(t.productId),
+  ]
+);
+
+
+
+export const cartsRelations = relations(carts, ({ one, many }) => ({
+  user: one(users, {
+    fields: [carts.userId],
+    references: [users.id],
+  }),
+  items: many(cartItems),
+}));
+
+export const cartItemsRelations = relations(cartItems, ({ one }) => ({
+  cart: one(carts, {
+    fields: [cartItems.cartId],
+    references: [carts.id],
+  }),
+  product: one(products, {
+    fields: [cartItems.productId],
+    references: [products.id],
+  }),
+  variant: one(productVariants, {
+    fields: [cartItems.variantId],
+    references: [productVariants.id],
+  }),
+}));
+
+// ---- Favourites Relations ----
+export const favouritesRelations = relations(favourites, ({ one }) => ({
+  user: one(users, {
+    fields: [favourites.userId],
+    references: [users.id],
+  }),
+  product: one(products, {
+    fields: [favourites.productId],
+    references: [products.id],
+  }),
+}));
+
 // Relations (optional but useful for queries)
 export const usersRelations = relations(users, ({ many }) => ({
   reviews: many(reviews),
   addresses: many(addresses),
+  cart: many(carts),          // ← add
+  favourites: many(favourites), // ← add
 }));
 
 export const productsRelations = relations(products, ({ one, many }) => ({
@@ -157,6 +251,8 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   variants: many(productVariants),
   features: many(productFeatures),
   reviews: many(reviews),
+  cartItems: many(cartItems),     // ← add
+  favourites: many(favourites),
 }));
 
 export const categoriesRelations = relations(categories, ({ one, many }) => ({

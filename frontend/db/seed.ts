@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import {
   users,
   categories,
@@ -31,8 +31,8 @@ async function seed() {
   const [user1, user2] = await db
     .insert(users)
     .values([
-      { name: "Alice Johnson", email: "[email protected 1]" },
-      { name: "Bob Smith", email: "[email protected 2]" },
+      { name: "Alice Johnson", email: "alice@gmail.com" },
+      { name: "Bob Smith", email: "bob@gmail.com" },
     ])
     .returning();
 
@@ -461,6 +461,16 @@ async function seed() {
       position: 0,
     })),
   );
+
+  await db.execute(sql`
+    UPDATE categories c
+    SET product_count = (
+      SELECT COUNT(*)
+      FROM products p
+      WHERE p.category_id = c.id
+        AND p.is_active = true
+    )
+  `);
 
   console.log(
     `Seed complete. Inserted ${clothingProducts.length} clothing products.`,

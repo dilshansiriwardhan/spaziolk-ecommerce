@@ -14,6 +14,7 @@ import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import * as schema from "@/db/schema";
 import { DrawerDemo } from "@/components/my/drawer";
+import AddToCartButton from "@/components/my/add-to-cart";
 
 export default async function ProductPage({
   params,
@@ -32,8 +33,6 @@ export default async function ProductPage({
       reviews: true,
     },
   });
-
-  console.log(product);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-1 mb-20">
@@ -128,9 +127,12 @@ export default async function ProductPage({
           </Tabs>
           <div className="py-2">
             <DrawerDemo
-              trigger={<div><Button className="w-full">Add to Cart</Button></div>}
+              trigger={
+                <div>
+                  <AddToCartButton productId={product!.id} variantId={null} />
+                </div>
+              }
             />
-            
           </div>
         </div>
         {/* Accordition */}

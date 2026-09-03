@@ -15,6 +15,13 @@
       "when": 1788375441062,
       "tag": "0001_overconfident_shinobi_shaw",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788417872991,
+      "tag": "0002_talented_wolfpack",
+      "breakpoints": true
     }
   ]
 }

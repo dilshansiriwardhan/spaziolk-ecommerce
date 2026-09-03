@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { toast } from "sonner"
+import * as React from "react";
+import { toast } from "sonner";
 
-import { useIsMobile } from "@/hooks/use-mobile"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -15,15 +15,18 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
+} from "@/components/ui/drawer";
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldLabel,
   FieldTitle,
-} from "@/components/ui/field"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+} from "@/components/ui/field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useEffect } from "react";
+import { getFavAction } from "@/app/actions/add-to-fav";
+import { Fav } from "@/lib/add-fav";
 
 const deliveryTimes = [
   {
@@ -57,31 +60,37 @@ const deliveryTimes = [
     label: "6:30 PM – 6:45 PM",
     description: "Last slot before kitchen closes",
   },
-]
+];
 type DrawerDemoProps = {
   trigger: React.ReactElement;
 };
 
 export function Favourites({ trigger }: DrawerDemoProps) {
-  const [open, setOpen] = React.useState(false)
-  const [deliveryTime, setDeliveryTime] = React.useState("asap")
-  const isMobile = useIsMobile()
+  const [open, setOpen] = React.useState(false);
+  const [deliveryTime, setDeliveryTime] = React.useState("asap");
+  const isMobile = useIsMobile();
+
+  const [cart, setCart] = React.useState<Fav>(null);
+
+  useEffect(() => {
+    if (open) {
+      getFavAction().then(setCart);
+      console.log(cart);
+    }
+  }, [open]);
 
   function handleConfirm() {
-    const selected = deliveryTimes.find((time) => time.value === deliveryTime)
+    const selected = deliveryTimes.find((time) => time.value === deliveryTime);
 
     if (!selected) {
-      return
+      return;
     }
 
-    setOpen(false)
+    setOpen(false);
     toast("Delivery time confirmed", {
       description: selected.label,
-    })
+    });
   }
-
-  
-
 
   return (
     <Drawer
@@ -90,7 +99,7 @@ export function Favourites({ trigger }: DrawerDemoProps) {
       showSwipeHandle={isMobile}
       swipeDirection={isMobile ? "down" : "right"}
     >
-      <DrawerTrigger render={trigger} nativeButton = {false}/>
+      <DrawerTrigger render={trigger} nativeButton={false} />
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Pick a delivery time</DrawerTitle>
@@ -100,23 +109,23 @@ export function Favourites({ trigger }: DrawerDemoProps) {
         </DrawerHeader>
         <div className="flex-1 scroll-fade overflow-y-auto p-4">
           <RadioGroup
-            value={deliveryTime}
+            value={cart}
             onValueChange={setDeliveryTime}
             className="gap-2"
           >
-            {deliveryTimes.map((time) => (
-              <FieldLabel key={time.value} htmlFor={time.id}>
+            {cart?.map((item) => (
+              <FieldLabel key={item.id} htmlFor={item.id}>
                 <Field orientation="horizontal">
                   <FieldContent>
                     <FieldTitle className="flex items-center gap-2">
-                      {time.label}
-                      {time.badge ? (
-                        <Badge variant="secondary">{time.badge}</Badge>
-                      ) : null}
+                      {item.product.productName}
+                      {/* {item.product.categoryId ? (
+                        <Badge variant="secondary">{item.product.categoryId}</Badge>
+                      ) : null} */}
                     </FieldTitle>
-                    <FieldDescription>{time.description}</FieldDescription>
+                    <FieldDescription>{item.product.productPrice}</FieldDescription>
                   </FieldContent>
-                  <RadioGroupItem value={time.value} id={time.id} />
+                  <RadioGroupItem value={item.product.isActive} id={item.id} />
                 </Field>
               </FieldLabel>
             ))}
@@ -130,5 +139,5 @@ export function Favourites({ trigger }: DrawerDemoProps) {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }

@@ -1,6 +1,10 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Star } from "lucide-react";
+import { addToFavAction } from "@/app/actions/add-to-fav";
 
 type ProductCardProps = {
   id: string;
@@ -15,9 +19,18 @@ const ProductCard = ({
   productPrice,
   imageSrc = "/products/001.webp",
 }: ProductCardProps) => {
+  const handleAddToFav = async () => {
+    const result = await addToFavAction(id);
+
+    // if (result.success) {
+    //   alert("Added to cart!");
+    // } else {
+    //   alert(result.error || "Something went wrong");
+    // }
+  };
   return (
-    <Link href={`/products/${id}`}>
-      <div className="border border-foreground/10 w-full rounded-xl overflow-hidden">
+    <div className="border border-foreground/10 w-full rounded-xl overflow-hidden">
+      <Link href={`/products/${id}`}>
         <Image
           unoptimized
           src={imageSrc}
@@ -27,12 +40,14 @@ const ProductCard = ({
           className="w-full h-auto"
           priority
         />
-        <div className="p-2">
-          <p>{productName}</p>
-          <p>{productPrice} LKR</p>
-        </div>
+      </Link>
+      <div className="p-2">
+        <p className="flex justify-between">
+          {productName} <Star className="w-5" onClick={handleAddToFav} />
+        </p>
+        <p>{productPrice} LKR</p>
       </div>
-    </Link>
+    </div>
   );
 };
 
